@@ -53,11 +53,11 @@ at the top of `margin_monitor.py`.
 
 ## Example output
 
-     row    pair  notional_gbp   pnl_gbp  mtm_pct    decision            check
-       8 GBP/EUR     569176.88 -23330.52    -4.10 Margin Call Check live quote
+     row    pair  notional_gbp   pnl_gbp  mtm_pct    decision     check
+       8 GBP/EUR     569176.88 -23330.52    -4.10 Margin Call Live Rate
        5 EUR/USD     346080.89 -12970.92    -3.75     Warning
        7 GBP/USD     735294.12 -24207.64    -3.29 Margin Call
-       1 GBP/EUR     325379.61 -10066.75    -3.09     Warning Check live quote
+       1 GBP/EUR     325379.61 -10066.75    -3.09     Warning Live Rate
        6 GBP/EUR      72340.43  -1046.19    -1.45   No Action
        2 GBP/USD     375234.52  -4307.09    -1.15   No Action
        3 GBP/EUR     210084.03    893.71     0.43   No Action
