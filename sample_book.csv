@@ -1,0 +1,9 @@
+row,notional,contract_rate,side,currency,client_type,value_date,base
+1,375000,1.1525,buy,EUR,established,2027-06-01,GBP
+2,500000,1.3325,sell,USD,established,2027-03-15,GBP
+3,250000,1.1900,sell,EUR,new,2027-01-31,GBP
+4,3250000,1.3400,buy,USD,new,2027-09-01,GBP
+5,475000,1.1450,sell,USD,established,2027-02-28,EUR
+6,85000,1.1750,buy,EUR,established,2027-03-31,GBP
+7,1000000,1.3600,sell,USD,new,2027-08-30,GBP
+8,650000,1.1420,buy,EUR,established,2027-04-30,GBP
