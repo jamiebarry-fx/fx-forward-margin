@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 pd.set_option("display.width", 300)
 pd.set_option("display.max_columns", None)
 # Spot rates: units of each currency per one pound. Updated by hand.
-rates = {"EUR": 1.1987, "USD": 1.3179, "GBP": 1.000}
+rates = {"EUR": 1.1987, "USD": 1.3179, "GBP": 1.000, "JPY": 209.55, "CHF": 1.1054, "CAD": 1.8755, "AUD": 1.9638}
 # Central bank policy rates as decimals (4% = 0.04). Used to build forward rates.
-base_rates = {"GBP": 0.04, "EUR": 0.025, "USD": 0.03875}
+base_rates = {"GBP": 0.04, "EUR": 0.025, "USD": 0.03875, "JPY": 0.0125, "CHF": 0.00, "CAD": 0.025, "AUD": 0.0485}
 
 
 # Margin policy. New clients: margin call at 3% offside. Established: warning at 3%, margin call at 4%.
@@ -75,16 +75,15 @@ print(f"Total MTM: GBP {total_pnl:,.2f}")
 print(f"Total Position as a percentage: {total_position:,.2f}%")
 print()
 print(df["decision"].value_counts().to_string())
-
 # Chart: one bar per trade, most offside at the top.
 # Green = No Action, orange = Warning, red = Margin Call.
 # Dashed lines mark the 3% and 4% triggers.
 df["label"] = df["row"].astype(str) + ": " + df["pair"]
-df["color"] = df["decision"].map({"No Action": "green", "Warning":"orange", "Margin Call": "red"})
+df["color"] = df["decision"].map({"No Action": "green", "Warning": "orange", "Margin Call": "red"})
 chart = df.sort_values("mtm_pct", ascending=False)
 plt.barh(chart["label"], chart["mtm_pct"], color=chart["color"])
 plt.axvline(-3, color="orange", linestyle="--")
-plt.axvline(-4, color ="red", linestyle="--")
+plt.axvline(-4, color="red", linestyle="--")
 plt.title("Forward book: position by trade")
 plt.xlabel("MTM %")
 plt.tight_layout()
