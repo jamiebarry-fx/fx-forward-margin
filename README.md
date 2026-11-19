@@ -20,7 +20,8 @@ For each open forward it:
    live forward quote
 
 It then reports the whole book, sorted from most offside to most onside, with
-total notional, total mark-to-market and the book's overall position.
+total notional, total mark-to-market and the book's overall position, and saves
+a chart of every trade against the margin triggers.
 
 ## How the marking works
 
@@ -63,6 +64,16 @@ at the top of `margin_monitor.py`.
        3 GBP/EUR     210084.03    893.71     0.43   No Action
        4 GBP/USD    2425373.13  43023.48     1.77   No Action
 
+## Chart
+
+The tool also saves a chart of the book as `book_chart.png`.
+
+![Chart of the book by position](book_chart.png)
+
+One bar per trade, most offside at the top. Green is No Action, orange is Warning
+and red is Margin Call. The dashed lines mark the 3% and 4% triggers. A new client
+can be red before the 4% line, because their margin call level is 3%.
+
 ## Notes and limits
 
 - Interest rates are central bank policy rates, used as a stand-in for market
@@ -74,4 +85,3 @@ at the top of `margin_monitor.py`.
 ## Next steps
 
 - Load the dealing platform's export directly
-- Add a chart of the book by position

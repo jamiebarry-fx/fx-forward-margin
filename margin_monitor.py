@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Display settings so the full report prints on one line.
 pd.set_option("display.width", 300)
@@ -74,3 +75,18 @@ print(f"Total MTM: GBP {total_pnl:,.2f}")
 print(f"Total Position as a percentage: {total_position:,.2f}%")
 print()
 print(df["decision"].value_counts().to_string())
+
+# Chart: one bar per trade, most offside at the top.
+# Green = No Action, orange = Warning, red = Margin Call.
+# Dashed lines mark the 3% and 4% triggers.
+df["label"] = df["row"].astype(str) + ": " + df["pair"]
+df["color"] = df["decision"].map({"No Action": "green", "Warning":"orange", "Margin Call": "red"})
+chart = df.sort_values("mtm_pct", ascending=False)
+plt.barh(chart["label"], chart["mtm_pct"], color=chart["color"])
+plt.axvline(-3, color="orange", linestyle="--")
+plt.axvline(-4, color ="red", linestyle="--")
+plt.title("Forward book: position by trade")
+plt.xlabel("MTM %")
+plt.tight_layout()
+plt.savefig("book_chart.png")
+plt.show()
