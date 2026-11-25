@@ -2,7 +2,8 @@
 
 A small Python tool that marks a book of open FX forwards to market, flags
 positions that are close to, or past, a margin trigger, shows how far each trade
-is from a margin call, and stress tests the book against moves in spot.
+is from a margin call, totals exposure by currency pair, and stress tests the
+book against moves in spot.
 
 I built it to monitor a live forward book at an FX and payments firm. The trades
 in this repository are made up.
@@ -26,6 +27,9 @@ It then reports the whole book, sorted from the trade closest to a margin call
 to the one furthest from it, with total notional, total mark-to-market and the
 book's overall position, and saves a chart of every trade against the margin
 triggers.
+
+It also totals the book by currency pair and side, to show where exposure is
+concentrated.
 
 Finally it runs a stress test: it moves spot rates up and down by 1%, 2% and 3%,
 re-marks the book each time and shows which trades would change decision.
@@ -110,6 +114,30 @@ GBP/EUR from 1.1930 to 1.1971 would make it a margin call. Trade 7 is already
 1.24% past its call level, and GBP/USD would need to recover to 1.3216 to bring
 it back.
 
+## Exposure by pair
+
+The book is then grouped by currency pair and side, most offside first:
+
+    Exposure by pair
+       pair side  notional_gbp   pnl_gbp  mtm_pct
+    GBP/AUD  buy     393184.80 -16827.69    -4.28
+    EUR/USD sell     347734.42 -14849.51    -4.27
+    GBP/USD sell    1110528.64 -39395.48    -3.55
+    GBP/EUR  buy     966896.92 -30249.92    -3.13
+    GBP/JPY  buy     121359.22   -742.74    -0.61
+    GBP/EUR sell     210084.03    -46.07    -0.02
+    GBP/CAD  buy     149732.62   3582.11     2.39
+    GBP/USD  buy    2425373.13  66603.63     2.75
+    GBP/CHF  buy      89285.71   4214.64     4.72
+
+The percentage for each group is worked out from its totals, not averaged
+across trades, so a large trade carries more weight than a small one.
+
+This shows what the trade-by-trade report cannot. Three separate GBP/EUR buys
+add up to GBP 967,000 and are 3.13% offside as a group, and the same rise in
+GBP/EUR hurts all three at once. Buys and sells are kept apart because they
+move in opposite directions.
+
 ## Chart
 
 The tool also saves a chart of the book as `book_chart.png`.
@@ -168,6 +196,8 @@ and is called at 3%.
   client that is the 4% level.
 - The call spot assumes the gap between spot and forward stays as it is today,
   so it does not allow for a change in interest rates.
+- Exposure is shown gross, with buys and sells in a pair listed separately.
+  They are not netted against each other.
 - The stress test applies the same percentage move to every pair at once. This
   is a simple sensitivity check, not a single consistent market scenario, since
   linked pairs such as GBP/EUR, EUR/USD and GBP/USD cannot all move by the same
@@ -175,7 +205,7 @@ and is called at 3%.
 
 ## Next steps
 
-- Exposure by currency pair
+- Net exposure by pair
 - Margin call amounts
 - Tests against hand-worked answers
 - Load the dealing platform's export directly

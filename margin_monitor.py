@@ -1,6 +1,6 @@
 # FX Forward Margin Monitor
 # Marks a book of open FX forwards to market, applies a margin policy, shows how far each
-# trade is from a margin call, stress tests the book against moves in spot and charts it.
+# trade is from a margin call, totals exposure by pair, stress tests the book and charts it.
 # The trades in sample_book.csv are made up.
 
 import pandas as pd
@@ -112,6 +112,15 @@ print(f"Total MTM: GBP {total_pnl:,.2f}")
 print(f"Total Position as a percentage: {total_position:,.2f}%")
 print()
 print(df["decision"].value_counts().to_string())
+print()
+
+# Exposure by pair and side: total notional and mark-to-market in pounds.
+# The percentage is taken from the totals, so larger trades carry more weight.
+by_pair = df.groupby(["pair", "side"])[["notional_gbp", "pnl_gbp"]].sum().reset_index()
+by_pair["mtm_pct"] = by_pair["pnl_gbp"] / by_pair["notional_gbp"] * 100
+by_pair = by_pair.round(2).sort_values("mtm_pct")
+print("Exposure by pair")
+print(by_pair.to_string(index=False))
 print()
 
 # Stress test: move every pair's spot rate up and down, then re-mark the book and re-apply the margin policy.
